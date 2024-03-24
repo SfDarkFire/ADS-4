@@ -5,19 +5,18 @@ int countPairs1(int *arr, int len, int value) {
       for (int j = i + 1; j < len; ++j) {
           if (arr[i] + arr[j] == value) {
               sum++;
-          };
+          }
       }
 }
 return sum;
 }
 int countPairs2(int *arr, int len, int value) {
   int sum = 0;
-  for ( int j = len - 1; j > 0; --j) {
+  for (int j = len - 1; j > 0; --j) {
       if (arr[j] > value) {
           continue;
       }
       for (int i = 0; i < j; ++i) {
-
           if (arr[j] + arr[i] == value) {
               sum++;
           }
