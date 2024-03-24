@@ -25,47 +25,43 @@ int countPairs2(int *arr, int len, int value) {
 }
 return sum;
 }
-int pointCalc(int current_value, int searching_value_part, int point_index, int precision, int size) {
-    if ((current_value > searching_value_part) && ((point_index - precision) <= size)) {
-        point_index -= precision;
-
+int cbinsearch(int* arr, int size, int value) {
+    int l = 0;
+    int r = size - 1;
+    int mid = (r + l) / 2;
+    int counter = -1;
+    while (l <= r) {
+        if (arr[mid] == value) {
+            counter += 2;
+            break;
+        }
+        if (arr[mid] > value)
+            r = mid - 1;
+        else
+            l = mid + 1;
+        mid = (r + l) / 2;
     }
-    else if ((current_value < searching_value_part) && ((point_index + precision) >= size)) {
-        point_index += precision;
+    if (counter == -1) return 0;
+    for (int i = mid - 1; i >= 0; i--) {
+        if (arr[i] == value)
+            counter++;
+        else
+            break;
     }
-    return point_index;
+    for (int i = mid + 1; i <= size - 1; i++) {
+        if (arr[i] == value)
+            counter++;
+        else
+            break;
+    }
+    return counter;
 }
-int countPairs3(int* arr, int len, int searching_value_summ) {
-
-    int amount = 0;
-    int iterations = int(sqrt(len));
-
-    for (int a = 0; a < len; a++) {
-        std::vector<int> arr_vect(arr, arr + len);
-
-        if (arr[a] > searching_value_summ) {
-            continue;
-        }
-
-        int precision = (len) / 2;
-        int point_index = precision;
-        int searching_value_part = searching_value_summ - arr_vect.at(a);
-
-        for (int i = 0; i < iterations; i++) {
-            int max_index = arr_vect.size() - 1;
-            if (point_index > max_index) {
-                point_index = max_index;
-            }
-            else if (point_index < 0) {
-                point_index = 0;
-            }
-            precision /= 2;
-            int current_value = arr_vect.at(point_index);
-            if (current_value == searching_value_part) {
-                amount++;
-            }
-            point_index = pointCalc(current_value, searching_value_part, point_index, precision, max_index);
-        }
+int countPairs3(int* arr, int len, int value) {
+    int counter = 0;
+    int max = len - 1;
+    while (arr[max] > value) max--;
+    for (int i = 0; i <= max; i++) {
+        counter += cbinsearch(arr + i + 1, max - i, value - arr[i]);
     }
-    return amount;
+    return counter;
 }
